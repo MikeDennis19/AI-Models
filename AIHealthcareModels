@@ -1,0 +1,124 @@
+"""
+AI in Healthcare
+Artificial Intelligence (AI) is transforming healthcare in numerous ways by improving diagnostics, personalizing treatment, enhancing administrative efficiency, and advancing research.
+
+Overview of AI used in Healthcare
+Diagnostics and Imaging: AI algorithms, particularly deep learning models, are used to analyze medical images (e.g., X-rays, MRIs, CT scans) with high accuracy.
+Personalized Medicine:AI systems analyze patient data, including genetic information, to recommend personalized treatment plans. This can be particularly useful in oncology, where treatment can be tailored based on the genetic profile of the cancer.
+Predictive Analysis:AI models can predict the likelihood of certain diseases or health events based on patient data, such as predicting which patients are at higher risk for conditions like diabetes, heart disease, or sepsis.
+Virtual Health Assistant:AI-powered chatbots provide patients with information about symptoms, treatments, and general health advice. They can also schedule appointments and remind patients to take their medications.
+Administrative Efficiency:AI automates repetitive administrative tasks such as billing, scheduling, and managing patient records, reducing the burden on healthcare staff and improving operational efficiency.
+Robotic surgery: AI-powered robotic systems assist surgeons in performing complex procedures with greater precision and control. These systems can enhance surgical outcomes and reduce recovery times.
+Clinical Decision System: AI assists clinicians in making informed decisions by providing evidence-based recommendations and insights derived from large datasets and medical literature.
+Remote Monitoring and Wearables:AI analyzes data from wearable devices (e.g., smartwatches, fitness trackers) to monitor vital signs and other health metrics in real-time, alerting users and healthcare providers to potential issues.
+NLP: NLP algorithms process and analyze unstructured data from clinical notes, research articles, and other text sources to extract valuable insights and support clinical decision-making. 10: Mental Health: AI-powered apps and platforms offer therapeutic interventions for mental health conditions such as depression and anxiety, providing cognitive behavioral therapy (CBT) and other support tools.
+Activity Overview
+This activity is designed to consolidate knowledge about the application of AI in healthcare
+
+A real-world dataset related to Alzheimer's disease is provided for this activity. The dataset includes various features that capture motor and cognitive function metrics. The objective is to select relevant features and build a machine learning model to classify patients, which could aid in the early detection or diagnosis of Alzheimer's disease.
+
+This activity is structured to help learners apply machine learning algorithms in the context of healthcare using Python packages. Python concepts, instructions, and starter code are embedded within a Jupyter Notebook to guide learners through the process of building and evaluating a healthcare-related AI model.
+
+The dataset is that of Alzheimer's disease and includes a large number of columns, many of which are repeated measurements across different time points or conditions. Here's a summary based on the initial exploration:
+
+Dataset Overview: Total Columns: The dataset contains numerous columns, many of which seem to follow a pattern of repeated measures across different intervals or sessions (e.g., air_time1, air_time2, ..., air_time25).
+
+Target Variable: The dataset includes a class column, which likely indicates the category or diagnosis related to Alzheimer's disease (e.g., patients vs. healthy).
+
+Dataset contains 415 features. for demo, we are selecting only 10 features
+
+Key Features:
+
+gmrt_in_air1: Gross motor response time measured in the air, likely reflecting a form of motor function assessment.
+
+gmrt_on_paper1: Motor response time measured on paper, which might indicate fine motor skills.
+
+mean_acc_in_air1: Mean acceleration in the air, potentially related to general motor function.
+
+mean_acc_on_paper1: Mean acceleration on paper, indicating fine motor control.
+
+mean_speed_in_air1: Average speed of movement in the air.
+
+mean_speed_on_paper1: Average speed on paper, likely tied to writing or drawing speed.
+
+pressure_mean1: Average pressure applied, possibly during a writing or drawing task, indicative of motor control.
+
+pressure_var1: Variability in pressure, which could signal inconsistencies in motor function.
+
+disp_index1: A dispersion index, a general measure that could reflect variability or steadiness in a particular task.
+
+Import Dataset and relevant library
+"""
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import pandas as pd
+
+# Load the dataset
+df = pd.read_csv('data.csv')
+
+# Select relevant features
+selected_features = [
+    'gmrt_in_air1', 'gmrt_on_paper1', 'mean_acc_in_air1', 'mean_acc_on_paper1',
+    'mean_speed_in_air1', 'mean_speed_on_paper1', 'pressure_mean1',
+    'pressure_var1', 'disp_index1', 'class'
+]
+
+# Create a new DataFrame with only the selected features
+df_selected = df[selected_features]
+
+# Split the data into features and target
+X = df_selected.drop(columns=['class'])
+y = df_selected['class']
+
+print(X.shape)
+print(X.head())
+
+# Display the count of rows in each class
+class_counts = df['class'].value_counts()
+print("Class counts in the dataset:")
+print(class_counts)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=42)
+
+"""
+The model is trained using 3 different algorithms.
+
+1. RandomForest Classifier
+2. Support Vector Machine
+3. Logistic Regression.
+
+**Random Forest Classifier** is a popular machine learning model used for classification tasks. It is an ensemble learning method that combines multiple decision trees to improve prediction accuracy and robustness.
+
+**Support Vector Machine** (SVMs) are widely used in classification tasks due to their powerful and versatile approach to finding the optimal boundary between classes.
+
+**Logistic regression** is a widely used statistical method for classification problems due to its simplicity, interpretability, and effectiveness in modeling binary outcomes.
+"""
+
+# Train a Random Forest Classifier
+clf_RF = RandomForestClassifier(random_state=42)
+clf_RF.fit(X_train, y_train)
+
+#Train a Logistic Regression Model
+clf_LR = LogisticRegression(random_state=42)
+clf_LR.fit(X_train, y_train)
+
+# Make predictions
+y_pred_RF = clf_RF.predict(X_test)
+y_pred_SVC = clf_SVC.predict(X_test)
+y_pred_LR = clf_LR.predict(X_test)
+
+# Evaluate the model
+accuracy_RF = accuracy_score(y_test, y_pred_RF)
+accuracy_SVC = accuracy_score(y_test, y_pred_SVC)
+accuracy_LR = accuracy_score(y_test, y_pred_LR)
+print("Random Forest Accuracy:", accuracy_RF)
+print("SVC Accuracy:", accuracy_SVC)
+print("Logistic Regression Accuracy:", accuracy_LR)
+
